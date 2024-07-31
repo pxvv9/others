@@ -33,8 +33,14 @@ game.HttpGet = function(self, url)
     return originalHttpGet(self, url)
 end
 
--- Store the original http_request function
-local originalHttpRequest = http_request
+-- Check if the script is blocked by checking the response
+if game:HttpGet("https://raw.githubusercontent.com/zxrorocks/test-repo/main/test") ~= "nah" then
+    game.Players.LocalPlayer:Kick("Your executor does not support function overriding (💀)")
+    return
+end
+
+-- Store the original http_request function, if it exists
+local originalHttpRequest = http_request or request
 
 -- Override the http_request function
 http_request = function(x)
@@ -45,8 +51,8 @@ http_request = function(x)
     return originalHttpRequest(x)
 end
 
--- Store the original http.request function
-local originalHttpDotRequest = http.request
+-- Store the original http.request function, if it exists
+local originalHttpDotRequest = http.request or request
 
 -- Override the http.request function
 http.request = function(x)
@@ -55,12 +61,6 @@ http.request = function(x)
         return
     end
     return originalHttpDotRequest(x)
-end
-
--- Check if the script is blocked by checking the response
-if game:HttpGet("https://raw.githubusercontent.com/zxrorocks/test-repo/main/test") ~= "nah" then
-    game.Players.LocalPlayer:Kick("Your executor does not support function overriding (💀)")
-    return
 end
 
 -- Load the script from the provided URL
